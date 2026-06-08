@@ -1,0 +1,21 @@
+{
+  "name": "coresystemstgr-crawler",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Crawler + API + Dashboard com integração N8N",
+  "scripts": {
+    "dev": "concurrently -n api,dashboard -c blue,green \"pnpm --filter @core/api dev\" \"pnpm --filter @core/dashboard dev\"",
+    "dev:api": "pnpm --filter @core/api dev",
+    "dev:dashboard": "pnpm --filter @core/dashboard dev",
+    "crawl": "pnpm --filter @core/crawler start",
+    "build": "pnpm -r build",
+    "start:api": "pnpm --filter @core/api start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "typescript": "^5.8.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "targets": [
+    {
+      "id": "example-books",
+      "name": "Books to Scrape (demo)",
+      "url": "https://books.toscrape.com/",
+      "fields": [
+        {
+          "name": "primeiro_titulo",
+          "selector": "article.product_pod h3 a",
+          "attribute": "text",
+          "fallbacks": [".product_pod h3"]
+        },
+        {
+          "name": "primeiro_preco",
+          "selector": ".product_pod .price_color",
+          "attribute": "text",
+          "fallbacks": [".price_color"]
+        },
+        {
+          "name": "total_livros",
+          "selector": "form strong",
+          "attribute": "text"
+        }
+      ]
+    }
+  ]
+}

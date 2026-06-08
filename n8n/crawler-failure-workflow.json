@@ -1,0 +1,87 @@
+{
+  "name": "CoreSystemsTGR - Crawler Failure Handler",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "crawler-failure",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Falha Crawler",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "crawler-failure"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "target",
+              "name": "targetName",
+              "value": "={{ $json.body.targetName }}",
+              "type": "string"
+            },
+            {
+              "id": "error",
+              "name": "errorMessage",
+              "value": "={{ $json.body.errorMessage }}",
+              "type": "string"
+            },
+            {
+              "id": "url",
+              "name": "url",
+              "value": "={{ $json.body.url }}",
+              "type": "string"
+            },
+            {
+              "id": "prompt",
+              "name": "promptSuggestion",
+              "value": "={{ $json.body.promptSuggestion }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-fields",
+      "name": "Normalizar Payload",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "content": "## Próximo passo\n\nConecte aqui:\n- **OpenAI / Claude** para analisar HTML e sugerir novo seletor\n- **HTTP Request** para chamar Cursor SDK / API de IA\n- **Email / Slack** para alertar a equipe\n- **GitHub** para abrir issue automática",
+        "height": 220,
+        "width": 380
+      },
+      "id": "note",
+      "name": "Nota",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [700, 120]
+    }
+  ],
+  "connections": {
+    "Webhook Falha Crawler": {
+      "main": [
+        [
+          {
+            "node": "Normalizar Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": []
+}

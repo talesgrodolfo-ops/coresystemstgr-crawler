@@ -1,0 +1,10 @@
+node_modules
+dist
+.env
+.env.local
+data/*.db
+data/store.json
+data/artifacts/*
+!data/artifacts/.gitkeep
+!data/.gitkeep
+.DS_Store
