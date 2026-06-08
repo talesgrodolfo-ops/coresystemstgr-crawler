@@ -11,8 +11,10 @@
     "build": "pnpm -r build",
     "start:api": "pnpm --filter @core/api start",
     "deploy:api": "pnpm --filter @core/api deploy",
-    "deploy:dashboard": "pnpm --filter @core/dashboard build",
-    "db:migrate": "pnpm --filter @core/api db:migrate:remote"
+    "deploy:dashboard": "pnpm --filter @core/dashboard build && pnpm --filter @core/dashboard deploy",
+    "db:migrate": "pnpm --filter @core/api db:migrate:remote",
+    "cf:login": "pnpm --filter @core/api exec wrangler login",
+    "cf:d1:create": "pnpm --filter @core/api exec wrangler d1 create crawler-hub"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",

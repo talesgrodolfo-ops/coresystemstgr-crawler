@@ -18,9 +18,16 @@ export function createApp(getStore: (c?: { env?: WorkerBindings }) => Store) {
 
   app.use('*', async (c, next) => {
     const env = getEnv(c)
-    const origins = env.CORS_ORIGIN?.split(',') ?? ['http://localhost:5173', 'https://monitor.coresystemstgr.com']
+    const allowed = (env.CORS_ORIGIN?.split(',') ?? ['http://localhost:5173', 'https://monitor.coresystemstgr.com'])
+      .map((o) => o.trim())
+      .filter(Boolean)
     return cors({
-      origin: origins,
+      origin: (origin) => {
+        if (!origin) return allowed[0]
+        if (allowed.includes(origin)) return origin
+        if (/^https:\/\/[\w-]+\.pages\.dev$/.test(origin)) return origin
+        return undefined
+      },
       allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       allowHeaders: ['Content-Type', 'Authorization', 'x-api-key', 'x-admin-key'],
     })(c, next)

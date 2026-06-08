@@ -8,8 +8,11 @@ database_name = "crawler-hub"
 database_id = "SUBSTITUA_PELO_ID_DA_SUA_D1"
 
 [vars]
-CORS_ORIGIN = "http://localhost:5173,https://monitor.coresystemstgr.com"
+CORS_ORIGIN = "http://localhost:5173,https://monitor.coresystemstgr.com,https://coresystemstgr-crawler.pages.dev"
 
-# Secrets (não coloque aqui — use wrangler secret put):
+# Domínio customizado (configure DNS na Cloudflare antes)
+# routes = [{ pattern = "api.coresystemstgr.com", custom_domain = true }]
+
+# Secrets (wrangler secret put — nunca commitar):
 # ADMIN_KEY
 # N8N_FAILURE_WEBHOOK
