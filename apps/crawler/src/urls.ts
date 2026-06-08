@@ -22,6 +22,7 @@ export function matchesPatterns(url: string, patterns: string[]): boolean {
 }
 
 export function shouldStop(url: string, target: CrawlTarget): boolean {
+  if (!target.stop_url_patterns.length) return false
   return matchesPatterns(url, target.stop_url_patterns)
 }
 

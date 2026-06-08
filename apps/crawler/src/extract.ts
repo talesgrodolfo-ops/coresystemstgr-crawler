@@ -32,3 +32,19 @@ export function extractAll(
     value: extractField($, field),
   }))
 }
+
+/** Extrai o que encontrar; ignora campos ausentes (útil em follow_links). */
+export function extractAllSafe(
+  $: cheerio.CheerioAPI,
+  fields: CrawlField[]
+): { name: string; value: string }[] {
+  const rows: { name: string; value: string }[] = []
+  for (const field of fields) {
+    try {
+      rows.push({ name: field.name, value: extractField($, field) })
+    } catch {
+      // campo ausente nesta página — segue
+    }
+  }
+  return rows
+}

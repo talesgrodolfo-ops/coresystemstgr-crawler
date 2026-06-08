@@ -64,11 +64,11 @@ export function createApp(getStore: (c?: { env?: WorkerBindings }) => Store) {
     })
     const webhook = getEnv(c).N8N_FAILURE_WEBHOOK
     if (webhook && body.htmlSnippet) {
-      c.executionCtx?.waitUntil(fetch(webhook, {
+      void fetch(webhook, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ event: 'crawler.failure', ...body, htmlPreview: body.htmlSnippet.slice(0, 8000) }),
-      }))
+      }).catch(() => {})
     }
     return c.json({ ok: true, failureId: body.failureId })
   })

@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import * as cheerio from 'cheerio'
-import { extractAll } from './extract.js'
+import { extractAll, extractAllSafe } from './extract.js'
 import { fetchTargets } from './fetch-targets.js'
 import { notifyApiFailure, notifyApiSuccess, notifyN8nFailure } from './notify.js'
 import type { CrawlTarget, ExtractedItem } from './types.js'
@@ -43,14 +43,10 @@ async function crawlFollowLinks(target: CrawlTarget): Promise<{ pages: string[];
     pages.push(current.url)
 
     const $ = cheerio.load(html)
-    try {
-      const extracted = extractAll($, target.fields)
-      for (const row of extracted) {
-        items.push({ pageUrl: current.url, name: row.name, value: row.value })
-      }
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err)
-      throw new Error(`${message} (página: ${current.url})`)
+    const extracted = extractAllSafe($, target.fields)
+    if (!extracted.length) continue
+    for (const row of extracted) {
+      items.push({ pageUrl: current.url, name: row.name, value: row.value })
     }
 
     if (current.depth < target.max_depth) {
