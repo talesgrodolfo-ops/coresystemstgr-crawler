@@ -47,6 +47,7 @@ export type CrawlFailure = {
   error_message: string
   selector: string | null
   html_path: string | null
+  html_snippet?: string | null
   created_at: string
 }
 

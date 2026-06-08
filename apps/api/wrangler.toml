@@ -1,0 +1,15 @@
+name = "coresystemstgr-api"
+main = "src/worker.ts"
+compatibility_date = "2024-11-12"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "crawler-hub"
+database_id = "SUBSTITUA_PELO_ID_DA_SUA_D1"
+
+[vars]
+CORS_ORIGIN = "http://localhost:5173,https://monitor.coresystemstgr.com"
+
+# Secrets (não coloque aqui — use wrangler secret put):
+# ADMIN_KEY
+# N8N_FAILURE_WEBHOOK

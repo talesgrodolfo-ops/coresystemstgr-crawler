@@ -9,7 +9,10 @@
     "dev:dashboard": "pnpm --filter @core/dashboard dev",
     "crawl": "pnpm --filter @core/crawler start",
     "build": "pnpm -r build",
-    "start:api": "pnpm --filter @core/api start"
+    "start:api": "pnpm --filter @core/api start",
+    "deploy:api": "pnpm --filter @core/api deploy",
+    "deploy:dashboard": "pnpm --filter @core/dashboard build",
+    "db:migrate": "pnpm --filter @core/api db:migrate:remote"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",

@@ -1,20 +1,19 @@
 import type { Context, Next } from 'hono'
-import { store } from './store.js'
+import type { Store } from './store-interface.js'
+import { adminKey, getEnv } from './env.js'
 
 export type AuthMode = 'admin' | 'token' | 'any'
 
-export function requireAuth(mode: AuthMode, scope?: 'read' | 'write' | 'crawl' | 'agent') {
+export function requireAuth(store: Store, mode: AuthMode, scope?: 'read' | 'write' | 'crawl' | 'agent') {
   return async (c: Context, next: Next) => {
-    const adminKey = process.env.ADMIN_KEY ?? process.env.API_KEY
+    const env = getEnv(c)
+    const key = adminKey(env)
     const headerAdmin = c.req.header('x-admin-key')
     const bearer = c.req.header('authorization')?.replace(/^Bearer\s+/i, '')
     const apiKey = c.req.header('x-api-key')
 
-    const isAdmin =
-      !!adminKey &&
-      (headerAdmin === adminKey || apiKey === adminKey || bearer === adminKey)
-
-    const tokenAuth = bearer?.startsWith('cst_') ? store.validateToken(bearer, scope) : null
+    const isAdmin = !!key && (headerAdmin === key || apiKey === key || bearer === key)
+    const tokenAuth = bearer?.startsWith('cst_') ? await store.validateToken(bearer, scope) : null
 
     if (mode === 'admin') {
       if (!isAdmin) return c.json({ error: 'Admin key required' }, 401)
@@ -23,16 +22,17 @@ export function requireAuth(mode: AuthMode, scope?: 'read' | 'write' | 'crawl' |
 
     if (mode === 'token') {
       if (!tokenAuth) return c.json({ error: 'Valid SDK token required' }, 401)
-      c.set('tokenId', tokenAuth.id)
       return next()
     }
 
-    if (!isAdmin && !tokenAuth) {
-      return c.json({ error: 'Unauthorized' }, 401)
-    }
-
-    if (tokenAuth) c.set('tokenId', tokenAuth.id)
-    c.set('isAdmin', isAdmin)
+    if (!isAdmin && !tokenAuth) return c.json({ error: 'Unauthorized' }, 401)
     return next()
   }
+}
+
+export function checkWorkerKey(c: Context): boolean {
+  const env = getEnv(c)
+  const key = adminKey(env)
+  const header = c.req.header('x-api-key') ?? c.req.header('authorization')?.replace(/^Bearer\s+/i, '')
+  return !key || header === key
 }

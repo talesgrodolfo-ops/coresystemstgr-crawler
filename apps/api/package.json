@@ -5,8 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
+    "dev:worker": "wrangler dev",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "deploy": "wrangler deploy",
+    "db:migrate:local": "wrangler d1 execute crawler-hub --local --file=./migrations/0001_init.sql",
+    "db:migrate:remote": "wrangler d1 execute crawler-hub --remote --file=./migrations/0001_init.sql"
   },
   "dependencies": {
     "@hono/node-server": "^1.14.1",
@@ -15,8 +19,10 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250320.0",
     "@types/node": "^22.14.0",
     "tsx": "^4.19.3",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "wrangler": "^4.14.0"
   }
 }
