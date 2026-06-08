@@ -2,6 +2,7 @@ node_modules
 dist
 .env
 .env.local
+ADMIN_KEY.production.txt
 data/*.db
 data/store.json
 data/artifacts/*
