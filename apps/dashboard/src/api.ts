@@ -50,7 +50,10 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export const api = {
-  stats: () => request<{ totals: Record<string, number>; last7Days: unknown[] }>('/api/admin/stats'),
+  stats: () =>
+    request<{ totals: Record<string, number>; last7Days: { day: string; runs: number; successes: number }[] }>(
+      '/api/admin/stats'
+    ),
   targets: () => request<{ targets: CrawlTarget[] }>('/api/admin/targets'),
   getTarget: (id: string) => request<{ target: CrawlTarget }>(`/api/admin/targets/${id}`),
   saveTarget: (target: Partial<CrawlTarget> & { name: string; url: string; fields: CrawlTarget['fields'] }) =>

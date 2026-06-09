@@ -1,16 +1,28 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '../api'
+import BarChart from '../components/BarChart'
 
 export default function OverviewPage() {
   const [stats, setStats] = useState<Record<string, number> | null>(null)
+  const [last7Days, setLast7Days] = useState<{ day: string; runs: number; successes: number }[]>([])
   const [error, setError] = useState('')
 
   useEffect(() => {
-    api.stats().then((s) => setStats(s.totals)).catch((e) => setError(e.message))
+    api.stats()
+      .then((s) => {
+        setStats(s.totals)
+        setLast7Days(s.last7Days as { day: string; runs: number; successes: number }[])
+      })
+      .catch((e) => setError(e.message))
   }, [])
 
   const rate = stats && stats.total_runs ? Math.round((stats.success_runs / stats.total_runs) * 100) : 0
+
+  const globalChart = last7Days.map((d) => {
+    const [, m, day] = d.day.split('-')
+    return { label: `${day}/${m}`, value: d.runs, color: 'var(--accent)' }
+  })
 
   return (
     <div>
@@ -27,8 +39,15 @@ export default function OverviewPage() {
           <div className="stat-card"><span>Falhas</span><strong style={{ color: 'var(--danger)' }}>{stats.total_failures}</strong></div>
         </div>
       )}
+      {globalChart.length > 0 && (
+        <div className="panel">
+          <h3>Execuções — últimos 7 dias (todos os crawlers)</h3>
+          <BarChart data={globalChart} />
+        </div>
+      )}
       <div className="quick-links">
         <Link className="card-link" to="/targets">+ Configurar URLs e seletores</Link>
+        <Link className="card-link" to="/charts">Ver gráficos por crawler</Link>
         <Link className="card-link" to="/results">Ver dados extraídos</Link>
         <Link className="card-link" to="/settings">Gerar token SDK (Cursor)</Link>
       </div>

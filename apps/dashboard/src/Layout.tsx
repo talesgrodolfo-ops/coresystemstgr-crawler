@@ -5,6 +5,7 @@ const links = [
   { to: '/', label: 'Visão geral' },
   { to: '/targets', label: 'Targets' },
   { to: '/results', label: 'Resultados' },
+  { to: '/charts', label: 'Gráficos' },
   { to: '/failures', label: 'Falhas' },
   { to: '/settings', label: 'SDK / Tokens' },
 ]
