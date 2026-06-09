@@ -1,6 +1,17 @@
 import type { ApiTokenMeta, CrawlFailure, CrawlItem, CrawlRun, CrawlTarget } from './types'
 
-const API_URL = import.meta.env.VITE_API_URL ?? ''
+const PRODUCTION_API = 'https://coresystemstgr-api.talesgrodolfo.workers.dev'
+
+function resolveApiUrl(): string {
+  const fromEnv = import.meta.env.VITE_API_URL?.trim()
+  if (fromEnv) return fromEnv
+  if (typeof window !== 'undefined' && window.location.hostname.endsWith('.pages.dev')) {
+    return PRODUCTION_API
+  }
+  return ''
+}
+
+const API_URL = resolveApiUrl()
 
 export function getAdminKey() {
   return localStorage.getItem('cst_admin_key') ?? import.meta.env.VITE_ADMIN_KEY ?? ''
@@ -19,12 +30,23 @@ function headers(): HeadersInit {
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_URL}${path}`, { ...init, headers: { ...headers(), ...init?.headers } })
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}))
-    throw new Error((err as { error?: string }).error ?? `Erro ${res.status}`)
+  if (!API_URL) {
+    throw new Error('API não configurada. Defina VITE_API_URL no build do Pages.')
   }
-  return res.json() as Promise<T>
+  const res = await fetch(`${API_URL}${path}`, { ...init, headers: { ...headers(), ...init?.headers } })
+  const text = await res.text()
+  if (!res.ok) {
+    let msg = `Erro ${res.status}`
+    try {
+      const err = JSON.parse(text) as { error?: string }
+      if (err.error) msg = err.error
+    } catch { /* corpo não é JSON */ }
+    throw new Error(msg)
+  }
+  if (text.trimStart().startsWith('<')) {
+    throw new Error('A API retornou HTML em vez de JSON. Verifique VITE_API_URL no Cloudflare Pages.')
+  }
+  return JSON.parse(text) as T
 }
 
 export const api = {
