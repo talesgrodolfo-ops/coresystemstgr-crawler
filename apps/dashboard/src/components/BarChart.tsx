@@ -2,7 +2,7 @@ type Bar = { label: string; value: number; color?: string }
 
 export default function BarChart({
   data,
-  height = 120,
+  height = 100,
   valueSuffix = '',
 }: {
   data: Bar[]
@@ -14,32 +14,45 @@ export default function BarChart({
   }
 
   const max = Math.max(...data.map((d) => d.value), 1)
-  const barWidth = Math.min(48, Math.floor(320 / data.length) - 8)
-  const width = data.length * (barWidth + 8) + 16
+  const padX = 16
+  const padTop = 18
+  const labelH = 22
+  const chartWidth = Math.max(360, data.length * 52)
+  const gap = 8
+  const barWidth = (chartWidth - padX * 2 - gap * (data.length - 1)) / data.length
+  const chartHeight = height + padTop + labelH
 
   return (
     <div className="bar-chart-wrap">
-      <svg viewBox={`0 0 ${width} ${height + 28}`} className="bar-chart" role="img">
+      <svg
+        viewBox={`0 0 ${chartWidth} ${chartHeight}`}
+        preserveAspectRatio="xMidYMid meet"
+        className="bar-chart"
+        role="img"
+        aria-label="Gráfico de barras"
+      >
         {data.map((d, i) => {
-          const h = Math.max(4, (d.value / max) * height)
-          const x = 8 + i * (barWidth + 8)
-          const y = height - h
+          const barH = Math.max(3, (d.value / max) * height)
+          const x = padX + i * (barWidth + gap)
+          const y = padTop + height - barH
           return (
-            <g key={d.label}>
+            <g key={`${d.label}-${i}`}>
               <rect
                 x={x}
                 y={y}
                 width={barWidth}
-                height={h}
-                rx={4}
+                height={barH}
+                rx={3}
                 fill={d.color ?? 'var(--accent)'}
                 opacity={0.9}
               />
-              <text x={x + barWidth / 2} y={height + 14} textAnchor="middle" className="chart-label">
+              {d.value > 0 && (
+                <text x={x + barWidth / 2} y={y - 5} textAnchor="middle" className="chart-value">
+                  {d.value}{valueSuffix}
+                </text>
+              )}
+              <text x={x + barWidth / 2} y={padTop + height + 16} textAnchor="middle" className="chart-label">
                 {d.label}
-              </text>
-              <text x={x + barWidth / 2} y={y - 4} textAnchor="middle" className="chart-value">
-                {d.value}{valueSuffix}
               </text>
             </g>
           )
