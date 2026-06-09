@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '../api'
-import BarChart from '../components/BarChart'
+import LineChart from '../components/LineChart'
 
 export default function OverviewPage() {
   const [stats, setStats] = useState<Record<string, number> | null>(null)
@@ -21,7 +21,7 @@ export default function OverviewPage() {
 
   const globalChart = last7Days.map((d) => {
     const [, m, day] = d.day.split('-')
-    return { label: `${day}/${m}`, value: d.runs, color: 'var(--accent)' }
+    return { label: `${day}/${m}`, value: d.runs }
   })
 
   return (
@@ -42,7 +42,7 @@ export default function OverviewPage() {
       {globalChart.length > 0 && (
         <div className="panel">
           <h3>Execuções — últimos 7 dias (todos os crawlers)</h3>
-          <BarChart data={globalChart} />
+          <LineChart color="var(--accent)" data={globalChart} />
         </div>
       )}
       <div className="quick-links">

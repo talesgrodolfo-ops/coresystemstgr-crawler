@@ -359,17 +359,22 @@ tr.selected, tr:hover {
   font-weight: 500;
 }
 
-.bar-chart-wrap {
+.chart-wrap {
   width: 100%;
   height: 148px;
   max-height: 148px;
   overflow: hidden;
 }
 
-.bar-chart {
+.chart-svg {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+.chart-axis {
+  stroke: var(--border);
+  stroke-width: 1;
 }
 
 .chart-label,

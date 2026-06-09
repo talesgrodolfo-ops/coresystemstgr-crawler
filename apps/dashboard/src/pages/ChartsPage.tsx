@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { api } from '../api'
-import BarChart from '../components/BarChart'
+import LineChart from '../components/LineChart'
 import { buildTargetCharts, type TargetChart } from '../lib/chart-data'
 
 export default function ChartsPage() {
@@ -45,8 +45,9 @@ export default function ChartsPage() {
 
             <div className="chart-block">
               <h4>Execuções — últimos 7 dias</h4>
-              <BarChart
-                data={c.byDay.map((d) => ({ label: d.label, value: d.runs, color: 'var(--accent)' }))}
+              <LineChart
+                color="var(--accent)"
+                data={c.byDay.map((d) => ({ label: d.label, value: d.runs }))}
               />
               <div className="chart-legend">
                 <span><i className="dot accent" /> total</span>
@@ -58,15 +59,17 @@ export default function ChartsPage() {
 
             <div className="chart-block">
               <h4>Itens extraídos — últimas execuções</h4>
-              <BarChart
-                data={c.recentItems.map((d) => ({ label: d.label, value: d.value, color: 'var(--success)' }))}
+              <LineChart
+                color="var(--success)"
+                data={c.recentItems.map((d) => ({ label: d.label, value: d.value }))}
               />
             </div>
 
             <div className="chart-block">
               <h4>Duração (s) — últimas execuções</h4>
-              <BarChart
-                data={c.recentDuration.map((d) => ({ label: d.label, value: d.value, color: '#8b5cf6' }))}
+              <LineChart
+                color="#8b5cf6"
+                data={c.recentDuration.map((d) => ({ label: d.label, value: d.value }))}
                 valueSuffix="s"
               />
             </div>
