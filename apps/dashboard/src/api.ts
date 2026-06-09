@@ -74,4 +74,9 @@ export const api = {
     }),
   revokeToken: (id: string) => request<{ ok: boolean }>(`/api/admin/tokens/${id}`, { method: 'DELETE' }),
   agentDocs: () => request<Record<string, unknown>>('/api/admin/agent-docs'),
+  chat: (message: string, history: { role: 'user' | 'assistant'; content: string }[]) =>
+    request<{ reply: string; mode: string; context_summary: { failures: number; targets: number } }>(
+      '/api/admin/chat',
+      { method: 'POST', body: JSON.stringify({ message, history }) }
+    ),
 }

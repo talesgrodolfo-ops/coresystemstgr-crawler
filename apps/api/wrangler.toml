@@ -16,3 +16,4 @@ CORS_ORIGIN = "http://localhost:5173,https://monitor.coresystemstgr.com,https://
 # Secrets (wrangler secret put — nunca commitar):
 # ADMIN_KEY
 # N8N_FAILURE_WEBHOOK
+# OPENAI_API_KEY

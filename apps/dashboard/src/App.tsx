@@ -9,6 +9,7 @@ import ResultsPage from './pages/ResultsPage'
 import FailuresPage from './pages/FailuresPage'
 import SettingsPage from './pages/SettingsPage'
 import ChartsPage from './pages/ChartsPage'
+import ChatPage from './pages/ChatPage'
 
 export default function App() {
   const [authed, setAuthed] = useState(!!getAdminKey())
@@ -23,6 +24,7 @@ export default function App() {
         <Route path="results" element={<ResultsPage />} />
         <Route path="failures" element={<FailuresPage />} />
         <Route path="charts" element={<ChartsPage />} />
+        <Route path="chat" element={<ChatPage />} />
         <Route path="settings" element={<SettingsPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>

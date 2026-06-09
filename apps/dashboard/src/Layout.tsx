@@ -7,6 +7,7 @@ const links = [
   { to: '/results', label: 'Resultados' },
   { to: '/charts', label: 'Gráficos' },
   { to: '/failures', label: 'Falhas' },
+  { to: '/chat', label: 'Assistente IA' },
   { to: '/settings', label: 'SDK / Tokens' },
 ]
 

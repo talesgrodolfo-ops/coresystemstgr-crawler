@@ -9,6 +9,7 @@ import {
   crawlTargetSchema,
   createTokenSchema,
 } from './schemas.js'
+import { chatRequestSchema, handleChat } from './chat.js'
 import type { Store } from './store-interface.js'
 
 export type WorkerBindings = AppEnv & { DB: D1Database }
@@ -126,6 +127,11 @@ export function createApp(getStore: (c?: { env?: WorkerBindings }) => Store) {
     return c.json({ ok: true })
   })
   admin.get('/agent-docs', (c) => c.json(AGENT_DOCS))
+  admin.post('/chat', async (c) => {
+    const body = chatRequestSchema.parse(await c.req.json())
+    const result = await handleChat(getStore(c), getEnv(c), body)
+    return c.json(result)
+  })
 
   app.route('/api/admin', admin)
 
